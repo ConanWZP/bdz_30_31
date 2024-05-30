@@ -22,11 +22,22 @@ void initDelay(void) {
 
 
 void Delay_us(uint32_t microseconds) {
+		/*
     uint32_t startTime = __HAL_TIM_GET_COUNTER(&timerInit);
 
     while ((__HAL_TIM_GET_COUNTER(&timerInit) - startTime) < microseconds) {
        // gdet ykazannoe chislo microsenods
     }
+	  */
+  __HAL_TIM_SET_COUNTER(&timerInit, 0);
+  __HAL_TIM_CLEAR_FLAG(&timerInit, TIM_FLAG_UPDATE);
+	
+  while(__HAL_TIM_GET_COUNTER(&timerInit) < microseconds) {
+    if (__HAL_TIM_GET_FLAG(&timerInit, TIM_FLAG_UPDATE) != RESET) {
+      break;
+    }
+		
+  }
 }
 
 
